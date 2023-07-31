@@ -21,4 +21,6 @@ app.get("/allOrder",authenticate.authenticateToken,userController.allOrders);
 
 app.post("/orderDetails",authenticate.authenticateToken,userController.orderDetails);
 
+app.post("/search",authenticate.authenticateToken,userController.Search);
+
 module.exports = app

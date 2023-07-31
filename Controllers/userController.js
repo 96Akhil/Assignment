@@ -7,6 +7,7 @@ const Sequelize = require("sequelize");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { jwtSecret } = require("../config/config");
+const eSearch = require("../config/elasticSearch");
 
 //Controller for the user to signup
 const signup = async function (req, res) {
@@ -99,6 +100,10 @@ const addProduct = async function (req, res) {
       description: description,
       quantity: quantity,
     });
+    const allProducts = await Product.findAll();
+
+    eSearch.createIndex();
+    eSearch.indexData(allProducts);
 
     if (productAdd) {
       res.status(200).json({ message: "Product has been successfully added!" });
@@ -278,7 +283,21 @@ const orderDetails = async function(req,res){
   }
 }
 
-
+//Controller to perform the elastic Search
+const Search = async function(req,res){
+  try {
+    const searchTerm = req.body.search;
+    const searchOutput = await eSearch.searchData(searchTerm);
+    if(searchOutput){
+      res.status(200).json({result:searchOutput})
+    }
+    else{
+      res.status(400).json({message:"No such item found!"})
+    }
+  } catch (error) {
+    res.status(500).json({error:error.message})
+  }
+}
 
 module.exports = {
   signup,
@@ -289,5 +308,6 @@ module.exports = {
   checkoutCart,
   placeOrder,
   allOrders,
-  orderDetails
+  orderDetails,
+  Search
 };
