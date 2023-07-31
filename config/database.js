@@ -1,12 +1,6 @@
 const {Sequelize} = require("sequelize");
-
-// const database = new Sequelize({
-//     dialect:'mysql',
-//     host:'sql6.freesqldatabase.com',
-//     username:'sql6635893',
-//     password:'SwVy77APsj',
-//     database:'sql6635893',
-// })
+const dotenv = require("dotenv");
+dotenv.config();
 
 const database = new Sequelize({
     dialect:'mysql',
